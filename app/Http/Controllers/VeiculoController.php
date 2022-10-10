@@ -49,17 +49,24 @@ class VeiculoController extends Controller
         if($modelo_id != '' && $modelo_id != NULL && $modelo_id != 0){
             $veiculos->where('veiculos.modelo_id', '=', $modelo_id);
         }
-        if($data_inicio != '' && $data_inicio != NULL && $data_inicio != 0){
-            $data_i = explode('/',$data_inicio);
-            $date_i=date_create($data_i[2].'-'.$data_i[1].'-'.$data_i[0]);
-            $data_inicio_formatada = date_format($date_i,"Y-m-d");
-            $veiculos->where('veiculos.created_at', '>=', $data_inicio_formatada);
-        }
-        if($data_fim != '' && $data_fim != NULL && $data_fim != 0){
-            $data_f = explode('/',$data_fim);
-            $date_f=date_create($data_f[2].'-'.$data_f[1].'-'.$data_f[0]);
-            $data_fim_formatada = date_format($date_f,"Y-m-d");
-            $veiculos->where('veiculos.created_at', '<=', $data_fim_formatada);
+        if($data_inicio == $data_fim){
+            $data_unica = explode('/',$data_inicio);
+            $data_unica = date_create($data_unica[2].'-'.$data_unica[1].'-'.$data_unica[0]);
+            $data_unica_formatada = date_format($data_unica,"Y-m-d");
+            $veiculos->whereDate('veiculos.created_at', '=', "$data_unica_formatada");
+        }else{
+            if($data_inicio != '' && $data_inicio != NULL && $data_inicio != 0){
+                $data_i = explode('/',$data_inicio);
+                $date_i=date_create($data_i[2].'-'.$data_i[1].'-'.$data_i[0]);
+                $data_inicio_formatada = date_format($date_i,"Y-m-d");
+                $veiculos->where('veiculos.created_at', '>=', $data_inicio_formatada);
+            }
+            if($data_fim != '' && $data_fim != NULL && $data_fim != 0){
+                $data_f = explode('/',$data_fim);
+                $date_f=date_create($data_f[2].'-'.$data_f[1].'-'.$data_f[0]);
+                $data_fim_formatada = date_format($date_f,"Y-m-d");
+                $veiculos->where('veiculos.created_at', '<=', $data_fim_formatada);
+            }
         }
         print($veiculos->get());
     }
